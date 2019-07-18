@@ -4,7 +4,17 @@ var amqp = require('amqplib/callback_api');
 const CONN_URL = 'amqp://M!nk@2019#:Qq4FaMjW@localhost';
 const queueName = 'julian-queue';
 
-amqp.connect(CONN_URL, (error, connection) => {
+var raabitmqSettings = {
+  protocol: 'amqp',
+  hostname: '10.142.2.2',
+  port: 15672,
+  username: 'M!nk@2019#',
+  password: 'Qq4FaMjW',
+  vhost: '/',
+  authMechanism: ['PLAIN', 'AMQPLAIN', 'EXTERNAL']
+}
+
+amqp.connect(raabitmqSettings, (error, connection) => {
   if (error) {
     console.log(error);
   }
