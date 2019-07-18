@@ -3,6 +3,7 @@ var amqp = require('amqplib/callback_api');
 const queueName = 'julian-queue';
 const exchange = 'julian-exchange';
 const routingKey = 'julian-routing-key';
+const timestamp = new Date().getTime;
 
 const rabbitmqSettings = {
   protocol: 'amqp',
@@ -19,8 +20,6 @@ const rabbitmqSettings = {
     'JMS-Message-ID': 1324,
   }
 };
-
-const timestamp = new Date().getTime;
 
 amqp.connect(rabbitmqSettings, (error, connection) => {
   if (error) {
