@@ -1,34 +1,47 @@
 var amqp = require('amqplib/callback_api');
 
-// const uri = 'amqp://M!nk@2019#:Qq4FaMjW@localhost';
-const CONN_URL = 'amqp://M!nk@2019#:Qq4FaMjW@localhost';
 const queueName = 'julian-queue';
+const exchange = 'julian-exchange';
+const routingKey = 'julian-routing-key';
 
-var raabitmqSettings = {
+const rabbitmqSettings = {
   protocol: 'amqp',
   hostname: '10.142.2.2',
-  port: 15672,
+  port: 5672,
   username: 'M!nk@2019#',
   password: 'Qq4FaMjW',
   vhost: '/',
   authMechanism: ['PLAIN', 'AMQPLAIN', 'EXTERNAL']
-}
+};
 
-amqp.connect(raabitmqSettings, (error, connection) => {
+const timestamp = new Date().getTime;
+
+const headers = {
+  'JMS-Message-Priority': 'Normal',
+  'JMS-Message-Time-Stamp': timestamp,
+  'JMS-Message-Type': 'Test Message',
+  'JMS-Message-ID': 1324,
+};
+
+
+
+amqp.connect(rabbitmqSettings, (error, connection) => {
   if (error) {
-    console.log(error);
+    throw error;
   }
   connection.createChannel((error, channel) => {
     if (error) {
       throw error;
     }
-    var msg = 'Hello world Julian';
+    let msg = 'Hello world Julian';
 
     channel.assertQueue(queueName, {
       durable: true
     });
 
-    channel.sendToQueue(queueName, Buffer.from(msg));
+    channel.publish(exchange, routingKey, Buffer.from(msg))
+      .headers(headers);
+
     console.log(" [x] Sent %s", msg);
   });
 });
