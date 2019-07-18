@@ -11,19 +11,16 @@ const rabbitmqSettings = {
   username: 'M!nk@2019#',
   password: 'Qq4FaMjW',
   vhost: '/',
-  authMechanism: ['PLAIN', 'AMQPLAIN', 'EXTERNAL']
+  authMechanism: ['PLAIN', 'AMQPLAIN', 'EXTERNAL'],
+  headers: {
+    'JMS-Message-Priority': 'Normal',
+    'JMS-Message-Time-Stamp': timestamp,
+    'JMS-Message-Type': 'Test Message',
+    'JMS-Message-ID': 1324,
+  }
 };
 
 const timestamp = new Date().getTime;
-
-const headers = {
-  'JMS-Message-Priority': 'Normal',
-  'JMS-Message-Time-Stamp': timestamp,
-  'JMS-Message-Type': 'Test Message',
-  'JMS-Message-ID': 1324,
-};
-
-
 
 amqp.connect(rabbitmqSettings, (error, connection) => {
   if (error) {
@@ -39,8 +36,7 @@ amqp.connect(rabbitmqSettings, (error, connection) => {
       durable: true
     });
 
-    channel.publish(exchange, routingKey, Buffer.from(msg))
-      .headers(headers);
+    channel.publish(exchange, routingKey, Buffer.from(msg));
 
     console.log(" [x] Sent %s", msg);
   });
