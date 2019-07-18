@@ -13,12 +13,14 @@ const rabbitmqSettings = {
   password: 'Qq4FaMjW',
   vhost: '/',
   authMechanism: ['PLAIN', 'AMQPLAIN', 'EXTERNAL'],
+  expiration: timestamp,
   headers: {
     'JMS-Message-Priority': 'Normal',
     'JMS-Message-Time-Stamp': timestamp,
     'JMS-Message-Type': 'Test Message',
     'JMS-Message-ID': 1324,
-  }
+  },
+  'delivery_mode': 2,
 };
 
 amqp.connect(rabbitmqSettings, (error, connection) => {
