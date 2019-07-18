@@ -1,0 +1,24 @@
+{
+  "name": "rabbitmq-node",
+  "version": "1.0.0",
+  "description": "Basic config to send and recive queue messages",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gilsantosjulian/rabbitmq-nodejs.git"
+  },
+  "keywords": [
+    "rabbit",
+    "node",
+    "GCP"
+  ],
+  "author": "Julian Andres Gil Santos",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gilsantosjulian/rabbitmq-nodejs/issues"
+  },
+  "homepage": "https://github.com/gilsantosjulian/rabbitmq-nodejs#readme"
+}
