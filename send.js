@@ -1,4 +1,4 @@
-var amqp = require('amqplib/callback_api');
+const amqp = require('amqplib/callback_api');
 
 const queueName = 'julian-queue';
 const exchange = 'julian-exchange';
@@ -13,14 +13,6 @@ const rabbitmqSettings = {
   password: 'Qq4FaMjW',
   vhost: '/',
   authMechanism: ['PLAIN', 'AMQPLAIN', 'EXTERNAL'],
-  expiration: timestamp,
-  headers: {
-    'JMS-Message-Priority': 'Normal',
-    'JMS-Message-Time-Stamp': timestamp,
-    'JMS-Message-Type': 'Test Message',
-    'JMS-Message-ID': 1324,
-  },
-  'delivery_mode': 2,
 };
 
 amqp.connect(rabbitmqSettings, (error, connection) => {
@@ -31,14 +23,41 @@ amqp.connect(rabbitmqSettings, (error, connection) => {
     if (error) {
       throw error;
     }
-    let msg = 'Hello world Julian';
 
     channel.assertQueue(queueName, {
       durable: true
     });
 
-    channel.publish(exchange, routingKey, Buffer.from(msg));
+    let payload = {
+      key1: 'Julian',
+      key2: 'Julian'
+    };
 
-    console.log(" [x] Sent %s", msg);
+    let headers = {
+      JMSMessageID: 1324,
+      JMSPriority: 'Normal',
+      JMSTimeStamp: 231231,
+      JMSCorrelationID: 1264,
+    }
+
+    let data = {
+      expiration: 12653412,
+      delivery_mode: 2,
+      headers: headers,
+    }
+
+    channel.publish(exchange, routingKey, Buffer.from(JSON.stringify(payload)), data);
+    console.log(" [x] Sent %s", payload);
   });
 });
+
+process.on('exit', (code) => {
+  channel.close();
+  console.log(`Closing rabbitmq channel`);
+});
+
+// {
+//   expiration: timestamp,
+//   'delivery_mode': 2,
+//   headers: headers,
+// }
