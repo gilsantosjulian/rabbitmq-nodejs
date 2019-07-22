@@ -1,4 +1,14 @@
 {
-  "URL_BASE": "https://shd-tst.minka.io/v1",
-  "PORT": "3000"
+  "URL_BASE": "",
+  "PORT": "3000",
+  "rabbit": {
+    "HOST_NAME": "10.142.2.2",
+    "PORT": "5672",
+    "QUEUE_NAME": "julian-queue",
+    "EXCHANGE": "julian-exchange",
+    "ROUTING_KEY": "julian-routing-key",
+    "PROTOCOL": "amqp",
+    "VHOST": "/",
+    "AUTH_MECHANISM": ["PLAIN", "AMQPLAIN", "EXTERNAL"]
+  }
 }
