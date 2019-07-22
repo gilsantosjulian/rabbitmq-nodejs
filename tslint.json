@@ -1,0 +1,16 @@
+{
+    "defaultSeverity": "warning",
+    "extends": [
+        // Tslint extends
+        "tslint:recommended",
+        "tslint-config-prettier",
+        "tslint-eslint-rules"
+    ],
+    "rules": {
+        "object-literal-sort-keys":false, // Order Json keys
+        "max-line-length": {"options":[90],"severity":"warning"}, // Max line longitude of 90
+        "comment-format":[true, "check-space"], // Check format of comments
+        "trailing-comma": {"options":[true,"always"],"severity":"error"}, // Print trailing commas wherever possible when multi-line
+        "indent":{"options":[true, "tabs"],"severity":"error"} // Identation needed
+    }
+}
