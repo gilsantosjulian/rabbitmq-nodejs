@@ -35,7 +35,7 @@ const logger = createLogger({
 });
 
 const requestLogger = expressWinston.logger({
-  transports: [getWinstonTransport()],
+  transports: [],
   format: combine(
     colorize(),
     timestamp({
@@ -51,7 +51,7 @@ const requestLogger = expressWinston.logger({
 });
 
 const errorLogger = expressWinston.errorLogger({
-  transports: [getWinstonTransport()],
+  transports: [],
   format: combine(
     colorize(),
     timestamp({

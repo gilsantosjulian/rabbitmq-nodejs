@@ -3,10 +3,6 @@ import { loadEnvironmentVariables } from './config';
 import routes from './routes';
 import logging from './logger';
 
-require('@google-cloud/debug-agent').start({
-  allowExpressions: true,
-});
-
 loadEnvironmentVariables();
 
 const PORT = process.env.PORT || 3000;
