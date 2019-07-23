@@ -7,8 +7,8 @@ const rabbitmqSettings = {
   protocol: config.rabbit.PROTOCOL,
   hostname: config.rabbit.HOST_NAME,
   port: config.rabbit.PORT,
-  username: process.env.USERNAME,
-  password: process.env.PASSWORD,
+  username: process.env.RABBIT_QUEUE_USERNAME,
+  password: process.env.RABBIT_QUEUE_PASSWORD,
   vhost: process.env.VHOST,
   authMechanism: ['PLAIN', 'AMQPLAIN', 'EXTERNAL'],
 };
