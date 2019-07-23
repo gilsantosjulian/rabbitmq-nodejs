@@ -10,7 +10,11 @@ router.use(logging.errorLogger);
 
 router.post('/', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const response: any = await send(req);
+    const body = req.body;
+    console.log('body #############');
+    console.log(body);
+
+    const response: any = await send(body);
     console.log(response);
 
     res.status(200).send({

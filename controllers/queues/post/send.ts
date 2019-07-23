@@ -13,7 +13,7 @@ const rabbitmqSettings = {
   authMechanism: ['PLAIN', 'AMQPLAIN', 'EXTERNAL'],
 };
 
-export const send = async (query: any): Promise<any> => {
+export const send2 = async (query: any): Promise<any> => {
   try {
     loggin.info('ANTES DEL CONNECT');
     amqp.connect(rabbitmqSettings, (error: any, connection: any) => {
@@ -56,6 +56,63 @@ export const send = async (query: any): Promise<any> => {
       loggin.info('DESPUES DEL CONNECT');
       return 'ok';
     });
+  } catch (error) {
+    loggin.error(error);
+    return error;
+  }
+};
+
+const createConnection = async (settings: object) => {
+  const connection = await amqp.connect(settings, (error: any, conn: any) => {
+    if (error) {
+      throw error;
+    }
+    return conn;
+  });
+  return connection;
+};
+
+const createChannel = async (conn: any, queue_name: string) => {
+  const channel = await conn.createChannel((error: any, ch: any) => {
+    if (error) {
+      loggin.error(error);
+      throw error;
+    }
+    ch.assertQueue(queue_name, {
+      durable: true,
+    });
+    return ch;
+  });
+  return channel;
+};
+
+let headers = {
+  JMSMessageID: 1324,
+  JMSPriority: 'Normal',
+  JMSTimeStamp: 231231,
+  JMSCorrelationID: 1264,
+};
+let data = {
+  expiration: 12653412,
+  deliveryMode: 2,
+  headers: headers,
+};
+
+export const send = async (payload: any): Promise<any> => {
+  try {
+    loggin.info('ANTES DEL CONNECT');
+    const connection = createConnection(rabbitmqSettings);
+    loggin.info('ANTES DEL CHANNEL');
+    const channel: any = createChannel(connection, config.rabbit.QUEUE_NAME);
+    loggin.info('ANTES DEL PUBLISH');
+    channel.publish(
+      config.rabbit.EXCHANGE,
+      config.rabbit.ROUTING_KEY,
+      Buffer.from(JSON.stringify(payload)),
+      data,
+    );
+    loggin.info('DESPUES DEL PUBLISH');
+    console.log(' [x] Sent %s', payload);
   } catch (error) {
     loggin.error(error);
     return error;
