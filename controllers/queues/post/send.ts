@@ -62,7 +62,7 @@ export const send2 = async (query: any): Promise<any> => {
   }
 };
 
-const createConnection = async (settings: object) => {
+const createConnection2 = async (settings: object) => {
   const connection = await amqp.connect(settings, (error: any, conn: any) => {
     if (error) {
       throw error;
@@ -72,7 +72,26 @@ const createConnection = async (settings: object) => {
   return connection;
 };
 
-const createChannel = async (conn: any, queue_name: string) => {
+const createConnection = (settings: object) =>
+  new Promise((resolve: any, reject: any) => {
+    amqp.connect(settings, (error: any, conn: any) => {
+      resolve(conn);
+      if (error) reject(error);
+    });
+  });
+
+const createChannel = (conn: any, queue_name: string) =>
+  new Promise((resolve: any, reject: any) => {
+    conn.createChannel((error: any, ch: any) => {
+      ch.assertQueue(queue_name, {
+        durable: true,
+      });
+      resolve(ch);
+      if (error) reject(error);
+    });
+  });
+
+const createChannel2 = async (conn: any, queue_name: string) => {
   const channel = await conn.createChannel((error: any, ch: any) => {
     if (error) {
       loggin.error(error);
@@ -101,9 +120,9 @@ let data = {
 export const send = async (payload: any): Promise<any> => {
   try {
     loggin.info('ANTES DEL CONNECT');
-    const connection = createConnection(rabbitmqSettings);
+    const connection = await createConnection(rabbitmqSettings);
     loggin.info('ANTES DEL CHANNEL');
-    const channel: any = createChannel(connection, config.rabbit.QUEUE_NAME);
+    const channel: any = await createChannel(connection, config.rabbit.QUEUE_NAME);
     loggin.info('ANTES DEL PUBLISH');
     channel.publish(
       config.rabbit.EXCHANGE,
