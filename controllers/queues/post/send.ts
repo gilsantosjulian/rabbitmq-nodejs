@@ -42,7 +42,7 @@ export const send = async (query: any): Promise<any> => {
         };
         let data = {
           expiration: 12653412,
-          delivery_mode: 2,
+          deliveryMode: 2,
           headers: headers,
         };
         channel.publish(
