@@ -2,7 +2,7 @@ import express, { Request, Response, NextFunction } from 'express';
 import { loadEnvironmentVariables } from './config';
 import routes from './routes';
 import logging from './logger';
-const bodyParser = require('body-parser');
+import bodyParser from 'body-parser';
 loadEnvironmentVariables();
 
 const PORT = process.env.PORT || 3000;
