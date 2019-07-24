@@ -50,9 +50,9 @@ export const send = async (data: any) => {
       data,
     );
     loggin.info(`Message sent it ${data.headers.JMSMessageID}`);
-    return data;
+    return { data: data };
   } catch (error) {
     loggin.error(error);
-    return error;
+    return { data, error: error };
   }
 };
