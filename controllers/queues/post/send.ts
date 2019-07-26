@@ -10,54 +10,49 @@ const rabbitmqSettings = {
   username: process.env.RABBIT_QUEUE_USERNAME,
   password: process.env.RABBIT_QUEUE_PASSWORD,
   vhost: process.env.VHOST,
-  authMechanism: ['PLAIN', 'AMQPLAIN', 'EXTERNAL'],
+  authMechanism: config.rabbit.AUTH_MECHANISM,
 };
 
-export const send = async (query: any): Promise<any> => {
-  try {
-    loggin.info('ANTES DEL CONNECT');
-    amqp.connect(rabbitmqSettings, (error: any, connection: any) => {
-      if (error) {
-        throw error;
-      }
-      loggin.info('CONEXION ESTABLECIDA');
-      connection.createChannel((error: any, channel: any) => {
-        if (error) {
-          loggin.error(error);
-          throw error;
-        }
-        loggin.info('CHANNEL CREADO');
-        channel.assertQueue(config.rabbit.QUEUE_NAME, {
-          durable: true,
-        });
-        let payload = {
-          key1: 'Julian',
-          key2: 'Julian',
-        };
-        let headers = {
-          JMSMessageID: 1324,
-          JMSPriority: 'Normal',
-          JMSTimeStamp: 231231,
-          JMSCorrelationID: 1264,
-        };
-        let data = {
-          expiration: 12653412,
-          deliveryMode: 2,
-          headers: headers,
-        };
-        channel.publish(
-          config.rabbit.EXCHANGE,
-          config.rabbit.ROUTING_KEY,
-          Buffer.from(JSON.stringify(payload)),
-          data,
-        );
-        console.log(' [x] Sent %s', payload);
-      });
-      loggin.info('DESPUES DEL CONNECT');
-      return 'ok';
+const ERROR_CONNECT: object = {
+  code: 404,
+  status: 'Was not possible to connect with the broker.',
+  message: 'The password and user are set up incorrectly. Please check.',
+};
+
+const createConnection = (settings: object) =>
+  new Promise((resolve: any, reject: any) => {
+    amqp.connect(settings, (error: any, conn: any) => {
+      resolve(conn);
+      if (error) reject(error);
     });
+    setTimeout(() => reject(ERROR_CONNECT), 4000);
+  });
+
+const createChannel = (conn: any, queue_name: string) =>
+  new Promise((resolve: any, reject: any) => {
+    conn.createChannel((error: any, ch: any) => {
+      ch.assertQueue(queue_name, {
+        durable: true,
+      });
+      resolve(ch);
+      if (error) reject(error);
+    });
+  });
+
+export const send = async (data: any) => {
+  try {
+    const connection = await createConnection(rabbitmqSettings);
+    const channel: any = await createChannel(connection, config.rabbit.QUEUE_NAME);
+    channel.publish(
+      config.rabbit.EXCHANGE,
+      config.rabbit.ROUTING_KEY,
+      Buffer.from(JSON.stringify(data.payload)),
+      data,
+    );
+    loggin.info(`Message sent it ${data.headers.JMSMessageID}`);
+    return { data: data };
   } catch (error) {
     loggin.error(error);
-    return error;
+    return { data, error: error };
   }
 };
