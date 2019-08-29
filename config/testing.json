@@ -4,9 +4,9 @@
   "rabbit": {
     "HOST_NAME": "10.142.2.2",
     "PORT": "5672",
-    "QUEUE_NAME": "shd-test",
-    "EXCHANGE": "amq-shd",
-    "ROUTING_KEY": "routing-shd",
+    "QUEUE_NAME": "tst-queue",
+    "EXCHANGE": "tst-exchange",
+    "ROUTING_KEY": "tst-routing-key",
     "PROTOCOL": "amqp",
     "VHOST": "/",
     "AUTH_MECHANISM": ["PLAIN", "AMQPLAIN", "EXTERNAL"]
