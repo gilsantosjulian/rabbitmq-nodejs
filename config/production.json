@@ -2,11 +2,11 @@
   "URL_BASE": "",
   "PORT": "3000",
   "rabbit": {
-    "HOST_NAME": "10.142.2.2",
+    "HOST_NAME": "10.142.1.11",
     "PORT": "5672",
-    "QUEUE_NAME": "tst-queue",
-    "EXCHANGE": "tst-exchange",
-    "ROUTING_KEY": "tst-routing-key",
+    "QUEUE_NAME": "prd-queue",
+    "EXCHANGE": "prd-exchange",
+    "ROUTING_KEY": "prd-routing-key",
     "PROTOCOL": "amqp",
     "VHOST": "/",
     "AUTH_MECHANISM": ["PLAIN", "AMQPLAIN", "EXTERNAL"]
